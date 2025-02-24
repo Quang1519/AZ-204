@@ -1,7 +1,7 @@
 import { type MetaFunction, type LoaderFunctionArgs } from '@remix-run/node'
 import { Form, Link, useLoaderData, useParams } from '@remix-run/react'
 import clsx from 'clsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { AnswerOptions } from '~/components/AnswerOptions'
 import { Button } from '~/components/Button'
@@ -21,7 +21,25 @@ export default function Topic() {
 	const questions = useLoaderData<typeof loader>()
 	const params = useParams()
 
+	useEffect(() => {
+		getParameter()
+	})
+
 	const [index, setIndex] = useState(0)
+
+	const getParameter = () => {
+		const currentURL = new URL(window.location.href)
+		const data = currentURL.searchParams.get('number') || "1"
+		setIndex(() => Number(data) - 1) 
+	}
+
+	const setParam = (index: Number) => {
+		const currentURL = new URL(window.location.href)
+		const searchParams = new URLSearchParams(currentURL.search)
+		searchParams.set('number', (Number(index) + 1).toString())
+		currentURL.search = searchParams.toString()
+		window.history.replaceState({}, null!, currentURL.toString())
+	}
 
 	const [checkedValues, setCheckedValues] = useState<number[]>([])
 	const [showAnswer, setShowAnswer] = useState(false)
@@ -41,8 +59,9 @@ export default function Topic() {
 		e.preventDefault()
 		setCheckedValues([])
 		setShowAnswer(false)
-		setIndex((index) => index + 1)
+		//setIndex((index) => index + 1)
 		// window.scrollTo(0, 0);
+		setParam(index + 1)
 		return false
 	}
 

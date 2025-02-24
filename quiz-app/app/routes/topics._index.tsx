@@ -13,7 +13,7 @@ export default function Index() {
 		<ul className="list-none p-0">
 			{topics.map((topic: string, index: number) => (
 				<li key={index} className="mb-2">
-					<Link className={InputStyle} to={`/topics/${topic}`}>
+					<Link className={InputStyle} to={`/topics/${topic}?number=1`}>
 						{topic}{' '}
 					</Link>
 				</li>
